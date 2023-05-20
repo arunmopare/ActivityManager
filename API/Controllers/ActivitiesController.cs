@@ -1,27 +1,34 @@
-using Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Domain;
+using Application.Activities;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-        private readonly DataContext _context;
-        public ActivitiesController(DataContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet]
-        public ActionResult<List<Activity>> GetActivities()
+        public async Task<ActionResult<List<Activity>>> GetActivities()
         {
-            return _context.Activities.ToList();
+            return await Mediator.Send(new List.Query());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Activity> GetActivity(Guid id)
+        public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
-            return _context.Activities.Where(activity => activity.Id == id).FirstOrDefault();
+            return await Mediator.Send(new Details.Query { Id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateActivity([FromBody] Activity activity)
+        {
+            return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditActivity(Guid id, Activity activity)
+        {
+            activity.Id = id;
+            return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
     }
 }
