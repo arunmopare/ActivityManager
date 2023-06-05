@@ -1,22 +1,29 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css';
-import axios from 'axios';
 import { Container, GridRow } from 'semantic-ui-react';
 import { Activity } from '../models/Activity';
 import Navbar from './Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get<Activity[]>('http://localhost:5000/api/activities')
-      .then(res => {
-        setActivities(res.data);
-        console.log("got res", res.data)
+    agent.Activities.list()
+      .then(response => {
+        let activities: Activity[] = [];
+        response.forEach(activity => {
+          activity.date = activity.date.split('T')[0];
+          activities.push(activity);
+          setLoading(false);
+        })
+        setActivities(activities);
       })
   }, [])
 
@@ -48,10 +55,13 @@ function App() {
     setActivities([...activities.filter(x => x.id !== id)])
   }
 
+  if (loading) {
+    return <LoadingComponent content='Loading at App' />
+  }
+
   return (
     <>
       <Navbar openForm={handleFormOpen} />
-
       <Container>
         <GridRow>
         </GridRow>
