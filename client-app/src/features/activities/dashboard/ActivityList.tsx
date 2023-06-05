@@ -30,8 +30,8 @@ const ActivityList = ({
                                 <div>{activity.city}, {activity.venue}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button onClick={() => { selectActivity(activity.id) }} floated="right" content="view" color="blue"></Button>
-                                <Button onClick={() => { deleteActivity(activity.id) }} floated="right" content="delete" color="red"></Button>
+                                <Button onClick={() => { selectActivity(activity.id) }} floated="right" content="View" color="blue"></Button>
+                                <Button onClick={() => { deleteActivity(activity.id) }} floated="right" content="Delete" color="red"></Button>
                                 <Label basic content={activity.category} />
                             </Item.Extra>
                         </Item.Content>
