@@ -12,6 +12,9 @@ const Navbar = ({ openForm }: Props) => {
                 <Menu.Item header>
                     <img src="/assets/logo.png" alt="Activities" style={{ marginRight: 10 }} />
                     Reactivities
+                    <Menu.Item>Reactivities</Menu.Item>
+                    <Menu.Item>Reactivities</Menu.Item>
+                    <Menu.Item>Reactivities</Menu.Item>
                 </Menu.Item>
                 <Menu.Item name="Activity" />
                 <Menu.Item>
