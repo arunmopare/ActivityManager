@@ -1,14 +1,23 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, Card, Grid, Image } from 'semantic-ui-react'
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
 
 
 const ActivityDetails = () => {
     const { activityStore } = useStore();
-    const { selectedActivity: activity, openForm, cancelSelectedActivity } = activityStore;
+    const { selectedActivity: activity, loadActivity, loadingInitial } = activityStore;
 
-    if (!activity) return <LoadingComponent />;
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) loadActivity(id);
+    }, [id, loadActivity])
+
+
+    if (!activity || loadingInitial) return <LoadingComponent />;
 
 
     return (
@@ -27,8 +36,8 @@ const ActivityDetails = () => {
                     </Card.Content>
                     <Card.Content extra>
                         <Button.Group widths={2}>
-                            <Button onClick={() => { openForm(activity.id) }} basic color="blue" content="Edit" />
-                            <Button onClick={cancelSelectedActivity} basic color="grey" content="Cancel" />
+                            <Button basic color="blue" content="Edit" />
+                            <Button basic color="grey" content="Cancel" />
                         </Button.Group>
                     </Card.Content>
                 </Card>
@@ -37,4 +46,4 @@ const ActivityDetails = () => {
     )
 }
 
-export default ActivityDetails
+export default observer(ActivityDetails)
