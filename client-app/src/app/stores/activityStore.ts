@@ -71,6 +71,7 @@ export default class ActivityStore {
             })
         }
     }
+
     updateActivity = async (activity: Activity) => {
         this.loading = true;
         try {
@@ -79,6 +80,25 @@ export default class ActivityStore {
                 this.activities = [...this.activities.filter(x => x.id !== activity.id), activity];
                 this.selectedActivity = activity;
                 this.editMode = false;
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error)
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
+
+    deleteActivity = async (id: string) => {
+        this.loading = true;
+        try {
+            await agent.Activities.delete(id);
+            runInAction(() => {
+                this.activities = [...this.activities.filter(x => x.id !== id)];
+                if (this.selectedActivity?.id === id) {
+                    this.cancelSelectedActivity();
+                }
                 this.loading = false;
             })
         } catch (error) {
