@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useState } from 'react'
-import { Button, Item, Label } from 'semantic-ui-react'
+import { Button, Icon, Item, ItemGroup, ItemImage, Label, Segment, SegmentGroup } from 'semantic-ui-react'
 import { useStore } from '../../../app/stores/store';
 import { Activity } from '../../../app/models/Activity';
 import { Link } from 'react-router-dom';
@@ -22,33 +22,42 @@ const ActivityListItem = ({ activity }: Props) => {
     }
 
     return (
-        <Item key={activity.id}>
-            <Item.Content>
-                <Item.Header as="a">
-                    {activity.title}
-                </Item.Header>
-                <Item.Meta>
-                    {activity.date}
-                </Item.Meta>
-                <Item.Description>
-                    <div>{activity.description}</div>
-                    <div>{activity.city}, {activity.venue}</div>
-                </Item.Description>
-                <Item.Extra>
-                    <Button as={Link} to={`/activities/${activity.id}`} floated="right" content="View" color="blue"></Button>
-                    <Button
-                        name={activity.id}
-                        onClick={(e) => { handleActivityDelete(e, activity.id) }}
-                        id={activity.id}
-                        loading={loading && target === activity.id}
-                        floated="right"
-                        content="Delete"
-                        color="red">
-                    </Button>
-                    <Label basic content={activity.category} />
-                </Item.Extra>
-            </Item.Content>
-        </Item>
+        <SegmentGroup>
+            <Segment>
+                <ItemGroup>
+                    <Item>
+                        <ItemImage size='tiny' circular src='/assets/user.png'></ItemImage>
+                        <Item.Content>
+                            <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                                {activity.title}
+                            </Item.Header>
+                            <Item.Description>Hosted by Bob</Item.Description>
+                        </Item.Content>
+                    </Item>
+                </ItemGroup>
+            </Segment>
+            <Segment>
+                <span>
+                    <Icon name='clock' /> {activity.date}
+                </span>
+                <span>
+                    <Icon name='marker' /> {activity.venue}
+                </span>
+            </Segment>
+            <Segment secondary>
+                attendees go here
+            </Segment>
+            <Segment clearing>
+                <span>{activity.description}</span>
+                <Button
+                    as={Link}
+                    to={`/activities/${activity.id}`}
+                    color='teal'
+                    floated='right'
+                    content='View'
+                ></Button>
+            </Segment>
+        </SegmentGroup>
     )
 }
 
